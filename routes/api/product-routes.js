@@ -30,14 +30,7 @@ router.get('/:id', async (req, res) => {
   // be sure to include its associated Category and Tag data
   try {
     const productData = await Product.findByPk(req.params.id, {
-      include: [
-        {
-          model: Category
-        },
-        {
-          model: Tag
-        }
-      ]
+      include: [{ model: Category }, { model: Tag }]
     });
 
     if (!productData) {
@@ -64,7 +57,7 @@ router.post('/', async (req, res) => {
     }
   */
   try {
-    const createProduct = await Product.create({
+    const product = await Product.create({
         product_name: req.body.product_name,
         price: req.body.price,
         stock: req.body.stock,
@@ -83,7 +76,6 @@ router.post('/', async (req, res) => {
       }
       // if no product tags, just respond
       res.status(200).json(product);
-      res.status(200).json(productTagIds);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -93,7 +85,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   // update product data
   try {
-    const updateProduct = await Product.update(req.body, {
+    const updatedProductTags = await Product.update(req.body, {
       where: {
         id: req.params.id,
       },
@@ -131,7 +123,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
   try {
     const productData = await Product.destroy({
